@@ -3,6 +3,7 @@
 ## Opis projektu
 Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach znaków ograniczenia prędkości oraz ich pozycji na zdjęciu
 ##Wymagana umiejscowienie plików
+(
 .
 ├── test
    ├── annotations
@@ -12,7 +13,9 @@ Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach zn
    └── images
 └── To_repozytorium
    └── main.py
+   )
 ## Przykładowy plik .xml w folderze "annotations"
+{
 <annotation>
    <folder>images</folder>
    <filename>road214.png</filename>
@@ -36,7 +39,7 @@ Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach zn
        </bndbox>
    </object>
 </annotation>
-
+)
 ## Wyjaśnienie poleceń
 Po nauce klasyfikatora możliwość jest użycie następujących poleceń:
 * classify sprawdzanie pojedynczych zbiorów zdjęć aby sprawdzić klase 
