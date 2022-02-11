@@ -2,7 +2,7 @@
 
 ## Opis projektu
 Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach znaków ograniczenia prędkości oraz ich pozycji na zdjęciu
-##Wymagana umiejscowienie plików
+## Wymagane umiejscowienie plików
 
 ```
 ├── test
@@ -41,6 +41,6 @@ Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach zn
 </annotation>
 ```
 ## Wyjaśnienie poleceń
-Po nauce klasyfikatora możliwość jest użycie następujących poleceń:
-* classify sprawdzanie pojedynczych zbiorów zdjęć aby sprawdzić klase 
-* detect sprawdzenie całego folderu zdjęć train/images wypisanie znajdujących się elementów oraz ich położenia 
+Po nauce klasyfikatora możliwe jest użycie następujących poleceń:
+* classify - sprawdzanie pojedynczych zbiorów zdjęć aby sprawdzić klase 
+* detect - sprawdzenie całego folderu zdjęć train/images wypisanie znajdujących się elementów oraz ich położenia 
