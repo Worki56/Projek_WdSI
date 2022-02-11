@@ -39,5 +39,5 @@ Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach zn
 
 ## Wyjaśnienie poleceń
 Po nauce klasyfikatora możliwość jest użycie następujących poleceń:
-*classify sprawdzanie pojedynczych zbiorów zdjęć aby sprawdzić klase 
-*detect sprawdzenie całego folderu zdjęć train/images wypisanie znajdujących się elementów oraz ich położenia 
+* classify sprawdzanie pojedynczych zbiorów zdjęć aby sprawdzić klase 
+* detect sprawdzenie całego folderu zdjęć train/images wypisanie znajdujących się elementów oraz ich położenia 
