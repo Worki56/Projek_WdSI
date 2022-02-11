@@ -36,6 +36,7 @@ Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach zn
        </bndbox>
    </object>
 </annotation>
+
 ## Wyjaśnienie poleceń
 Po nauce klasyfikatora możliwość jest użycie następujących poleceń:
 *classify sprawdzanie pojedynczych zbiorów zdjęć aby sprawdzić klase 
