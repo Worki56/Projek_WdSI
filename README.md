@@ -1,7 +1,7 @@
 # Projekt WdSI
 
 ## Opis projektu
-Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach znaków ograniczenia prędkości oraz ich pozycji na zdjęciu
+Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach znaków ograniczenia prędkości oraz ich pozycji na zdjęciu (dzieli na 2 typy speedlimit oraz other)
 ## Wymagane umiejscowienie plików
 
 ```
