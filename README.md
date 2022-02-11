@@ -44,3 +44,5 @@ Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach zn
 Po nauce klasyfikatora możliwe jest użycie następujących poleceń:
 * classify - sprawdzanie pojedynczych zbiorów zdjęć aby sprawdzić klase 
 * detect - sprawdzenie całego folderu zdjęć train/images wypisanie znajdujących się elementów oraz ich położenia 
+## Uwaga!!!
+Należy mieć zainstalowaną biblioteke cv2.
