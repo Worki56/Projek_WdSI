@@ -12,7 +12,7 @@ Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach zn
    └── images
 └── To_repozytorium
    └── main.py
-##Przykładowy plik .xml w folderze "annotations"
+## Przykładowy plik .xml w folderze "annotations"
 <annotation>
    <folder>images</folder>
    <filename>road214.png</filename>
@@ -36,7 +36,7 @@ Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach zn
        </bndbox>
    </object>
 </annotation>
-##Wyjaśnienie poleceń
+## Wyjaśnienie poleceń
 Po nauce klasyfikatora możliwość jest użycie następujących poleceń:
 *classify sprawdzanie pojedynczych zbiorów zdjęć aby sprawdzić klase 
 *detect sprawdzenie całego folderu zdjęć train/images wypisanie znajdujących się elementów oraz ich położenia 
