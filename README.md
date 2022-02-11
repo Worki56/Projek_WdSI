@@ -4,7 +4,7 @@
 Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach znaków ograniczenia prędkości oraz ich pozycji na zdjęciu
 ##Wymagana umiejscowienie plików
 
-`
+```
 ├── test
    ├── annotations
    └── images
@@ -13,7 +13,7 @@ Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach zn
    └── images
 └── To_repozytorium
    └── main.py
-`
+```
 ## Przykładowy plik .xml w folderze "annotations"
 `
 <annotation>
