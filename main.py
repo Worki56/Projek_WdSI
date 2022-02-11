@@ -117,7 +117,6 @@ def wyodrebienie3(dane,slownik):
         dane['desc'] = np.zeros((1, dict_size))
     return dane
 
-
 def trenowanie(dane):
     clf = RandomForestClassifier(dict_size)
     x = np.empty((1, dict_size))
@@ -144,6 +143,7 @@ def sprawdzanie(rf,sciezka,n,slownik):
     dane=wyodrebienie3(dane,slownik)
     wynik=predykcja2(rf,dane)
     if wynik=='1':
+        #print(n)
         global okes2
         okes2+=1
     return True
@@ -153,7 +153,6 @@ def wypisz(rf,sciezka):
     lista_plikow = os.listdir(sciezka)
     zawartosc=[]
     for n in lista_plikow:
-        print(n)
         sprawdzanie(rf,sciezka,n,slownik)
     return True
 
@@ -180,14 +179,17 @@ def klasyfikacja(rf,scie):
             dane['image'] = image[(wycik2[2] - 1):(wycik2[3] - 1), (wycik2[0] - 1):(wycik2[1] - 1)]
             dane=wyodrebienie3(dane,slownik)
             wynik=predykcja2(rf,dane)
-            print(wynik)
+            if wynik==1:
+                print('speedlimit')
+            else:
+                print('other')
     return True
 
 def main():
     # Przyjmująć że plik zanjduje się jak w przykładzie
     gdzie="test"
     gdzie2 = "train/images"
-    gdzie2 = "test/images"
+    #gdzie2 = "test/images"
     os.chdir("..")
     dane_z_plików = odczyt_danych_z_folderu(gdzie)
     # zapisuje plik w folderze "Test"
