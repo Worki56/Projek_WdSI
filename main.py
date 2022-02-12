@@ -3,9 +3,8 @@ import cv2
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 dict_size = 128
+min_przewidywana_ufnosc=0.5
 
-okes=0
-okes2=0
 
 def czyst(zawartosc):
     zawartosc1=''
@@ -53,8 +52,6 @@ def odczyt_danych_z_pliku(sciezk,sciezk1):
         image = cv2.imread(scie+zawartosc_p2['annotation.filename.'])
     for i in range(0, ile_object):
         if zawartosc_p2['annotation.object'+str(i)+'.name.']=="speedlimit":
-            global okes
-            okes+=1
             #Punkt 7 w zadaniach
             y=int(zawartosc_p2['annotation.object' + str(i) + '.bndbox.ymax.'])-int(zawartosc_p2['annotation.object' + str(i) + '.bndbox.ymin.'])
             x=int(zawartosc_p2['annotation.object' + str(i) + '.bndbox.xmax.'])-int(zawartosc_p2['annotation.object' + str(i) + '.bndbox.xmin.'])
@@ -129,7 +126,12 @@ def trenowanie(dane):
     return clf
 
 def predykcja2(rf, dane):
-    res=rf.predict(dane['desc'])[0]
+    ko=rf.predict_proba(dane['desc'])
+    #print(ko[0][1])
+    if ko[0][1]>=min_przewidywana_ufnosc:
+        res=1
+    else:
+        res=0
     return res
 
 def predykcja(rf, dane):
@@ -139,13 +141,11 @@ def predykcja(rf, dane):
 
 def sprawdzanie(rf,sciezka,n,slownik):
     dane = {}
+    print(n)
     dane['image'] = cv2.imread(sciezka + '/' + n)
     dane=wyodrebienie3(dane,slownik)
     wynik=predykcja2(rf,dane)
-    if wynik=='1':
-        #print(n)
-        global okes2
-        okes2+=1
+
     return True
 
 def wypisz(rf,sciezka):
@@ -172,6 +172,7 @@ def klasyfikacja(rf,scie):
             for i3 in range(0, len(wycik[i2])):
                 if wycik[i2][i3]==' ':
                     wycik2.append(int(wyraz_tyczas))
+                    wyraz_tyczas=''
                 else:
                     wyraz_tyczas =wyraz_tyczas +wycik[i2][i3]
             wycik2.append(int(wyraz_tyczas))
@@ -189,7 +190,6 @@ def main():
     # Przyjmująć że plik zanjduje się jak w przykładzie
     gdzie="test"
     gdzie2 = "train/images"
-    #gdzie2 = "test/images"
     os.chdir("..")
     dane_z_plików = odczyt_danych_z_folderu(gdzie)
     # zapisuje plik w folderze "Test"
@@ -206,8 +206,6 @@ def main():
             wypisz(rf,gdzie2)
         else:
             print("Error")
-        #print(okes)
-        #print(okes2)
 
 if __name__ == '__main__':
     main()
