@@ -11,7 +11,7 @@ Projekt polega na wykorzystaniu uczenia maszynowego do wykrycia na zdjęciach zn
 ├── train
    ├── annotations
    └── images
-└── To_repozytorium
+└── To_repozytorium (dowolna nazwa)
    └── main.py
 ```
 ## Przykładowy plik .xml w folderze "annotations"
