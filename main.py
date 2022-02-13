@@ -2,11 +2,11 @@ import os
 import cv2
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-dict_size = 128
+dict_size = 140
 min_przewidywana_ufnosc=0.5
-precyzja_pixel=3
-min_prec=0.9
-max_iter=1000
+precyzja_pixel=2
+min_prec=0.98
+max_iter=750
 
 def czyst(zawartosc):
     zawartosc1=''
@@ -46,7 +46,6 @@ def odczyt_danych_z_pliku(sciezk,sciezk1):
                 else:
                     lacz.append(wyraz_tyczas)
             wyraz_tyczas=''
-
         else:
             wyraz_tyczas = wyraz_tyczas + zawartosc_p1[i]
     zawartosc_p2['ile_object'] = ile_object
@@ -54,7 +53,6 @@ def odczyt_danych_z_pliku(sciezk,sciezk1):
         image = cv2.imread(scie+zawartosc_p2['annotation.filename.'])
     for i in range(0, ile_object):
         if zawartosc_p2['annotation.object'+str(i)+'.name.']=="speedlimit":
-            #Punkt 7 w zadaniach
             y=int(zawartosc_p2['annotation.object' + str(i) + '.bndbox.ymax.'])-int(zawartosc_p2['annotation.object' + str(i) + '.bndbox.ymin.'])
             x=int(zawartosc_p2['annotation.object' + str(i) + '.bndbox.xmax.'])-int(zawartosc_p2['annotation.object' + str(i) + '.bndbox.xmin.'])
             if int(zawartosc_p2['annotation.size.width.'])/10 <x and int(zawartosc_p2['annotation.size.height.'])/10 <y:
@@ -222,8 +220,6 @@ def precyzja(rf,dane,slownik,n,xmax,ymax):
             else:
                 nstar=[np[0],np[1],np[2],np[3],np[4]]
         iteracje+=1
-
-
     return nstar
 
 def sprawdzanie(rf,sciezka,n,slownik):
@@ -243,7 +239,6 @@ def sprawdzanie(rf,sciezka,n,slownik):
     czos=czos+wynik1
     for n1 in wynik10:
         wynik.append(n1)
-
     usu=[]
     if czos>1:
         for n in range(0,len(wynik)):
@@ -251,27 +246,27 @@ def sprawdzanie(rf,sciezka,n,slownik):
                 if n!=n1:
                     if (wynik[n][0]<=wynik[n1][0] and wynik[n][1]>=wynik[n1][1]) and (wynik[n][2]<=wynik[n1][2] and wynik[n][3]>=wynik[n1][3]):
                         usu.append(n)
-        usu = list(set(usu))
-        for i4 in reversed(usu):
-            del wynik[i4]
-            czos-=1
-        #print(wynik)
+        if len(usu)>=1:
+            usu = list(set(usu))
+            for i4 in reversed(usu):
+                #del wynik[i4]
+                wynik.pop(i4)
+                czos-=1
     for n in wynik:
         n=precyzja(rf,dane,slownik,n,xmax,ymax)
-        #print(n)
-
     usu=[]
     for n in range(0, len(wynik)):
         for n1 in range(0, len(wynik)):
             if n!=n1:
-                if ((wynik[n][0]+20 <= wynik[n1][0] or wynik[n][0]-20 >= wynik[n1][0]) and (wynik[n][1]+20 >= wynik[n1][1] or wynik[n][1]-20 <= wynik[n1][1])) and ((wynik[n][2]+20 <= wynik[n1][2] or wynik[n][2]-20 >= wynik[n1][2]) and (wynik[n][3]+20 >= wynik[n1][3] or wynik[n][3]-20 <= wynik[n1][3])):
+                if ((wynik[n][0]+70 >= wynik[n1][0] and wynik[n][0]-70 <= wynik[n1][0]) and (wynik[n][1]+70 >= wynik[n1][1] and wynik[n][1]-70 <= wynik[n1][1])) and ((wynik[n][2]+70 >= wynik[n1][2] and wynik[n][2]-70 <= wynik[n1][2]) and (wynik[n][3]+70 >= wynik[n1][3] and wynik[n][3]-70 <= wynik[n1][3])):
                     if wynik[n][4]>wynik[n1][4]:
                         usu.append(n1)
                     else:
                         usu.append(n)
     usu = list(set(usu))
     for i4 in reversed(usu):
-        del wynik[i4]
+        #del wynik[i4]
+        wynik.pop(i4)
         czos-=1
     print(czos)
     for n in wynik:
@@ -292,7 +287,6 @@ def klasyfikacja(rf,scie):
         nazwa=input()
         image = cv2.imread(scie + '/' + nazwa)
         ile_wycink=int(input())
-
         wycik=[]
         for i2 in range(0, ile_wycink):
             wycik.append(input())
