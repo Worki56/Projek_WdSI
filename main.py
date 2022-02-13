@@ -127,31 +127,90 @@ def trenowanie(dane):
 
 def predykcja2(rf, dane):
     ko=rf.predict_proba(dane['desc'])
-    #print(ko[0][1])
-    if ko[0][1]>=min_przewidywana_ufnosc:
-        res=1
-    else:
-        res=0
-    return res
+    return ko[0][1]
 
 def predykcja(rf, dane):
-    for przy in dane:
-        przy['label_pred']=predykcja2(rf,przy)
-    return dane
+    kek=predykcja2(rf,dane)
+    if kek >= min_przewidywana_ufnosc:
+        re=1
+    else:
+        re=0
+    return kek,re
+
+def podział(nr_iter,rf,dane,slownik,xmin,xmax,ymin,ymax):
+    nr_iter=nr_iter-1
+    x_ps=int(round((xmax-xmin)/2,0))
+    y_ps = int(round((ymax - ymin)/2, 0))
+    z_ps1=int(round((x_ps/2),0))
+    z_ps2=int(round((y_ps/2),0))
+    podz=[]
+    podz.append([xmin,xmin+x_ps,ymin,ymin+y_ps])
+    podz.append([xmin + x_ps+1, xmax, ymin, ymin + y_ps])
+    podz.append([xmin, xmin + x_ps, ymin + y_ps+1, ymax])
+    podz.append([xmin + x_ps+1, xmax, ymin + y_ps+1, ymax])
+    podz.append([xmin + x_ps-z_ps1, xmin + x_ps+z_ps1, ymin + y_ps-z_ps2,ymin + y_ps+z_ps2])
+    wynik=[]
+    czos=0
+    if nr_iter==0:
+        for n in podz:
+            dane1={}
+            dane1['image']=dane['image'][n[2]:n[3],n[0]:n[1]]
+            dane1 = wyodrebienie3(dane1, slownik)
+            wynik1, wynik10 = predykcja(rf, dane1)
+            if wynik10==1:
+                wynik.append(n)
+                czos+=1
+    else:
+        for n in podz:
+            dane1={}
+            dane1['image'] = dane['image'][n[2]:n[3],n[0]:n[1]]
+            dane1 = wyodrebienie3(dane1, slownik)
+            wynik1, wynik10 = predykcja(rf, dane1)
+            if wynik10 == 1:
+                wynik.append(n)
+                czos += 1
+            wynik1,wynik10=podział(nr_iter,rf,dane,slownik,n[0],n[1],n[2],n[3])
+            if wynik1 >0:
+                for n1 in wynik10:
+                    wynik.append(n1)
+                czos=czos+wynik1
+    return czos,wynik
+def precyzja():
+
+    return
 
 def sprawdzanie(rf,sciezka,n,slownik):
     dane = {}
     print(n)
     dane['image'] = cv2.imread(sciezka + '/' + n)
+    xmax=dane['image'].shape[1]-1
+    ymax=dane['image'].shape[0]-1
     dane=wyodrebienie3(dane,slownik)
-    wynik=predykcja2(rf,dane)
+    wynik = []
+    czos = 0
+    wynik1,wynik2=predykcja(rf,dane)
+    if wynik2 == 1:
+        czos+=1
+        wynik.append([0,xmax,0,ymax])
+    wynik1,wynik10=podział(3,rf,dane,slownik,0,xmax,0,ymax)
+    czos=czos+wynik1
+    for n1 in wynik10:
+        wynik.append(n1)
+    print(czos)
+    '''
+    if wynik2==1:
+        if podział()==False:
+            precyzja()
+        else:
 
+    else:
+        podział()
+    '''
     return True
 
 def wypisz(rf,sciezka):
     slownik = np.load('test/slow.npy')
     lista_plikow = os.listdir(sciezka)
-    zawartosc=[]
     for n in lista_plikow:
         sprawdzanie(rf,sciezka,n,slownik)
     return True
@@ -163,6 +222,7 @@ def klasyfikacja(rf,scie):
         nazwa=input()
         image = cv2.imread(scie + '/' + nazwa)
         ile_wycink=int(input())
+
         wycik=[]
         for i2 in range(0, ile_wycink):
             wycik.append(input())
@@ -180,7 +240,7 @@ def klasyfikacja(rf,scie):
             dane['image'] = image[(wycik2[2] - 1):(wycik2[3] - 1), (wycik2[0] - 1):(wycik2[1] - 1)]
             dane=wyodrebienie3(dane,slownik)
             wynik=predykcja2(rf,dane)
-            if wynik==1:
+            if wynik>=min_przewidywana_ufnosc:
                 print('speedlimit')
             else:
                 print('other')
