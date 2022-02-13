@@ -4,7 +4,9 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 dict_size = 128
 min_przewidywana_ufnosc=0.5
-
+precyzja_pixel=3
+min_prec=0.9
+max_iter=1000
 
 def czyst(zawartosc):
     zawartosc1=''
@@ -158,26 +160,71 @@ def podział(nr_iter,rf,dane,slownik,xmin,xmax,ymin,ymax):
             dane1 = wyodrebienie3(dane1, slownik)
             wynik1, wynik10 = predykcja(rf, dane1)
             if wynik10==1:
+                n.append(wynik1)
                 wynik.append(n)
                 czos+=1
     else:
+        iko=0
         for n in podz:
+            iko+=1
             dane1={}
             dane1['image'] = dane['image'][n[2]:n[3],n[0]:n[1]]
             dane1 = wyodrebienie3(dane1, slownik)
             wynik1, wynik10 = predykcja(rf, dane1)
             if wynik10 == 1:
+                n.append(wynik1)
                 wynik.append(n)
                 czos += 1
-            wynik1,wynik10=podział(nr_iter,rf,dane,slownik,n[0],n[1],n[2],n[3])
-            if wynik1 >0:
-                for n1 in wynik10:
-                    wynik.append(n1)
-                czos=czos+wynik1
+            if iko!=5:
+                wynik1,wynik10=podział(nr_iter,rf,dane,slownik,n[0],n[1],n[2],n[3])
+                if wynik1 >0:
+                    for n1 in wynik10:
+                        wynik.append(n1)
+                    czos=czos+wynik1
     return czos,wynik
-def precyzja():
 
-    return
+def precyzja(rf,dane,slownik,n,xmax,ymax):
+    iteracje=0
+    np=[]
+    nstar=[]
+
+    nstar=[n[0],n[1],n[2],n[3],n[4]]
+    kola=0
+    znak=0
+    while iteracje!=max_iter:
+        if nstar[4]>min_prec:
+            break
+        else:
+            np = [nstar[0], nstar[1], nstar[2], nstar[3], nstar[4]]
+            if znak==0:
+                np[kola]=np[kola]+precyzja_pixel
+                if kola==1:
+                    if np[kola]>xmax:
+                        np[kola] = np[kola] - precyzja_pixel
+                elif kola==3:
+                    if np[kola]>ymax:
+                        np[kola] = np[kola] - precyzja_pixel
+            else:
+                np[kola] = np[kola]- precyzja_pixel
+                if np[kola]<0:
+                    np[kola] = np[kola] + precyzja_pixel
+            dane1 = {}
+            dane1['image'] = dane['image'][np[2]:np[3], np[0]:np[1]]
+            dane1 = wyodrebienie3(dane1, slownik)
+            np[4] = predykcja2(rf, dane1)
+            if np[4] <nstar[4]:
+                znak+=1
+                if znak/2 >0.5:
+                    znak=0
+                    kola+=1
+                    if kola==4:
+                        break
+            else:
+                nstar=[np[0],np[1],np[2],np[3],np[4]]
+        iteracje+=1
+
+
+    return nstar
 
 def sprawdzanie(rf,sciezka,n,slownik):
     dane = {}
@@ -191,21 +238,44 @@ def sprawdzanie(rf,sciezka,n,slownik):
     wynik1,wynik2=predykcja(rf,dane)
     if wynik2 == 1:
         czos+=1
-        wynik.append([0,xmax,0,ymax])
+        wynik.append([0,xmax,0,ymax,wynik1])
     wynik1,wynik10=podział(3,rf,dane,slownik,0,xmax,0,ymax)
     czos=czos+wynik1
     for n1 in wynik10:
         wynik.append(n1)
-    print(czos)
-    '''
-    if wynik2==1:
-        if podział()==False:
-            precyzja()
-        else:
 
-    else:
-        podział()
-    '''
+    usu=[]
+    if czos>1:
+        for n in range(0,len(wynik)):
+            for n1 in range(0, len(wynik)):
+                if n!=n1:
+                    if (wynik[n][0]<=wynik[n1][0] and wynik[n][1]>=wynik[n1][1]) and (wynik[n][2]<=wynik[n1][2] and wynik[n][3]>=wynik[n1][3]):
+                        usu.append(n)
+        usu = list(set(usu))
+        for i4 in reversed(usu):
+            del wynik[i4]
+            czos-=1
+        #print(wynik)
+    for n in wynik:
+        n=precyzja(rf,dane,slownik,n,xmax,ymax)
+        #print(n)
+
+    usu=[]
+    for n in range(0, len(wynik)):
+        for n1 in range(0, len(wynik)):
+            if n!=n1:
+                if ((wynik[n][0]+20 <= wynik[n1][0] or wynik[n][0]-20 >= wynik[n1][0]) and (wynik[n][1]+20 >= wynik[n1][1] or wynik[n][1]-20 <= wynik[n1][1])) and ((wynik[n][2]+20 <= wynik[n1][2] or wynik[n][2]-20 >= wynik[n1][2]) and (wynik[n][3]+20 >= wynik[n1][3] or wynik[n][3]-20 <= wynik[n1][3])):
+                    if wynik[n][4]>wynik[n1][4]:
+                        usu.append(n1)
+                    else:
+                        usu.append(n)
+    usu = list(set(usu))
+    for i4 in reversed(usu):
+        del wynik[i4]
+        czos-=1
+    print(czos)
+    for n in wynik:
+        print(str(n[0]+1)+' '+str(n[1]+1)+' '+str(n[2]+1)+' '+str(n[3]+1))
     return True
 
 def wypisz(rf,sciezka):
