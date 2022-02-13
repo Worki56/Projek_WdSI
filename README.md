@@ -53,3 +53,4 @@ Podczas wykrywania znaków obraz jest dzielony na prostokąty jak w przykładzie
 W sumie obraz dzielony jest na (1(nie podzielony)+5+20+80) 106 kwadratów dla których obliczana jest predykcja. Jeżeli po predykcji okaże się że mały prostokąt znajduje się w większym prostokącie to ten większy jest usuwany. Następnie kolejne prostokąty z predykcją >=0.5 są powiększane/zmniejszane w taki sposób aby uzyskać jak największą predykcje. W następnej części usuwane są prostokąty o podobnych granicach (jeżeli granice są podobne w zakresie +/- 50 pikseli )
 
 *Na użytkowanym komputerze jest spełniony wymóg nie więcej niż 30s na zdjęcie oraz program działa poprawnie 
+(Procesor i5-9300H max 4GHz 8 wątkowy dysk około 33% procesora ST1000LM048 około 250KB/s podczas działania programu)
