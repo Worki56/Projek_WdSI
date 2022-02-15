@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-dict_size = 140
+dict_size = 128
 min_przewidywana_ufnosc=0.5
 precyzja_pixel=2
 min_prec=0.98
@@ -185,7 +185,6 @@ def precyzja(rf,dane,slownik,n,xmax,ymax):
     iteracje=0
     np=[]
     nstar=[]
-
     nstar=[n[0],n[1],n[2],n[3],n[4]]
     kola=0
     znak=0
@@ -248,10 +247,19 @@ def sprawdzanie(rf,sciezka,n,slownik):
                         usu.append(n)
         if len(usu)>=1:
             usu = list(set(usu))
-            for i4 in reversed(usu):
-                #del wynik[i4]
-                wynik.pop(i4)
-                czos-=1
+            wynik100=[]
+            for n in range(0,len(wynik)):
+                ikoes=0
+                for i4 in reversed(usu):
+                    if n==i4:
+                        ikoes=1
+                        czos -= 1
+                if ikoes==0:
+                    wynik100.append(wynik[n])
+            wynik=wynik100
+
+
+
     for n in wynik:
         n=precyzja(rf,dane,slownik,n,xmax,ymax)
     usu=[]
@@ -264,10 +272,16 @@ def sprawdzanie(rf,sciezka,n,slownik):
                     else:
                         usu.append(n)
     usu = list(set(usu))
-    for i4 in reversed(usu):
-        #del wynik[i4]
-        wynik.pop(i4)
-        czos-=1
+    wynik100 = []
+    for n in range(0, len(wynik)):
+        ikoes = 0
+        for i4 in reversed(usu):
+            if n == i4:
+                ikoes = 1
+                czos -= 1
+        if ikoes == 0:
+            wynik100.append(wynik[n])
+    wynik = wynik100
     print(czos)
     for n in wynik:
         print(str(n[0]+1)+' '+str(n[1]+1)+' '+str(n[2]+1)+' '+str(n[3]+1))
@@ -310,27 +324,22 @@ def klasyfikacja(rf,scie):
                 print('other')
     return True
 
-def main():
-    # Przyjmująć że plik zanjduje się jak w przykładzie
-    gdzie="test"
-    gdzie2 = "train/images"
-    os.chdir("..")
-    dane_z_plików = odczyt_danych_z_folderu(gdzie)
-    # zapisuje plik w folderze "Test"
-    uczenie(dane_z_plików, gdzie)
-    dane_z_plików=wyodrebienie(dane_z_plików, gdzie)
-    rf = trenowanie(dane_z_plików)
-    del dane_z_plików
-    while True:
-        #print('Koniec')
-        funkcja = input()
-        if funkcja == "classify":
-            klasyfikacja(rf,gdzie2)
-        elif funkcja == "detect":
-            wypisz(rf,gdzie2)
-        else:
-            print("Error")
 
-if __name__ == '__main__':
-    main()
 
+# Przyjmująć że plik zanjduje się jak w przykładzie
+gdzie="test"
+gdzie2 = "train/images"
+os.chdir("..")
+dane_z_plików = odczyt_danych_z_folderu(gdzie)
+# zapisuje plik w folderze "Test"
+uczenie(dane_z_plików, gdzie)
+dane_z_plików=wyodrebienie(dane_z_plików, gdzie)
+rf = trenowanie(dane_z_plików)
+del dane_z_plików
+funkcja = input()
+if funkcja == "classify":
+    klasyfikacja(rf, gdzie2)
+elif funkcja == "detect":
+    wypisz(rf, gdzie2)
+else:
+    print("Error")
