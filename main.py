@@ -258,8 +258,6 @@ def sprawdzanie(rf,sciezka,n,slownik):
                     wynik100.append(wynik[n])
             wynik=wynik100
 
-
-
     for n in wynik:
         n=precyzja(rf,dane,slownik,n,xmax,ymax)
     usu=[]
@@ -288,14 +286,14 @@ def sprawdzanie(rf,sciezka,n,slownik):
     return True
 
 def wypisz(rf,sciezka):
-    slownik = np.load('test/slow.npy')
+    slownik = np.load('train/slow.npy')
     lista_plikow = os.listdir(sciezka)
     for n in lista_plikow:
         sprawdzanie(rf,sciezka,n,slownik)
     return True
 
 def klasyfikacja(rf,scie):
-    slownik = np.load('test/slow.npy')
+    slownik = np.load('train/slow.npy')
     ile_zdj=int(input())
     for i in range(0, ile_zdj):
         nazwa=input()
@@ -327,8 +325,8 @@ def klasyfikacja(rf,scie):
 
 
 # Przyjmująć że plik zanjduje się jak w przykładzie
-gdzie="test"
-gdzie2 = "train/images"
+gdzie="train"
+gdzie2 = "test/images"
 os.chdir("..")
 dane_z_plików = odczyt_danych_z_folderu(gdzie)
 # zapisuje plik w folderze "Test"
