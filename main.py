@@ -2,6 +2,27 @@ import os
 import cv2
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
+
+# TODO Jakość kodu i raport (3/4)
+# TODO Kod bardzo malo czytelny, ale działa i jest wyjasniona zasada dzialania w raporcie.
+
+# TODO Skuteczność klasyfikacji 0.930 (4/4)
+# TODO [0.00, 0.50) - 0.0
+# TODO [0.50, 0.55) - 0.5
+# TODO [0.55, 0.60) - 1.0
+# TODO [0.60, 0.65) - 1.5
+# TODO [0.65, 0.70) - 2.0
+# TODO [0.70, 0.75) - 2.5
+# TODO [0.75, 0.80) - 3.0
+# TODO [0.80, 0.85) - 3.5
+# TODO [0.85, 1.00) - 4.0
+
+
+# TODO Skuteczność detekcji mAP = 0.002 (3/6) (1/2)
+
+# TODO max(3, 4+1) = 5
+
+
 dict_size = 128
 min_przewidywana_ufnosc=0.5
 precyzja_pixel=2
@@ -18,6 +39,7 @@ def czyst(zawartosc):
 def odczyt_danych_z_pliku(sciezk,sciezk1):
     #przyjmująć konstrukcje podaną w przykładzie zapisu .xml
     #można była skorzytać z pandas.read_xml ale wydawało mi się że jest to pójście na łatwizne
+    # TODO Lepiej korzystac z gotowych bibliotek, jesli mozna zaoszczedzic sobie troche pracy.
     sciezka=sciezk+sciezk1
     scie = sciezk + '/images/'
     zawartosc_p2={}
@@ -27,6 +49,7 @@ def odczyt_danych_z_pliku(sciezk,sciezk1):
     wyraz_tyczas = ''
     ile_object=0
     lacz=[]
+    # TODO Taki kod jest malo czytelny.
     for i in range(0, len(zawartosc_p1)):
         co=zawartosc_p1[i]
         if zawartosc_p1[i] == '<':
@@ -49,6 +72,7 @@ def odczyt_danych_z_pliku(sciezk,sciezk1):
         else:
             wyraz_tyczas = wyraz_tyczas + zawartosc_p1[i]
     zawartosc_p2['ile_object'] = ile_object
+    # TODO Przydalby sie opis jak wyglada wynikowa struktura.
     if ile_object != 0:
         image = cv2.imread(scie+zawartosc_p2['annotation.filename.'])
     for i in range(0, ile_object):
@@ -239,6 +263,7 @@ def sprawdzanie(rf,sciezka,n,slownik):
     for n1 in wynik10:
         wynik.append(n1)
     usu=[]
+    # TODO Kod zupelnie nieczytelny.
     if czos>1:
         for n in range(0,len(wynik)):
             for n1 in range(0, len(wynik)):
@@ -304,6 +329,7 @@ def klasyfikacja(rf,scie):
             wycik.append(input())
         for i2 in range(0, ile_wycink):
             wycik2 = []
+            # TODO Lepiej uzyc metody "split()".
             wyraz_tyczas = ''
             for i3 in range(0, len(wycik[i2])):
                 if wycik[i2][i3]==' ':
@@ -328,6 +354,7 @@ def klasyfikacja(rf,scie):
 gdzie="train"
 gdzie2 = "test/images"
 os.chdir("..")
+# TODO Stosowanie polskich znakow w nazwach to ryzykowne zagranie.
 dane_z_plików = odczyt_danych_z_folderu(gdzie)
 # zapisuje plik w folderze "Test"
 uczenie(dane_z_plików, gdzie)
